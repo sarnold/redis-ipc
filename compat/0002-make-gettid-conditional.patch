@@ -1,0 +1,40 @@
+diff --git a/src/redis_ipc.c b/src/redis_ipc.c
+index 84d7c2a..20d91a3 100644
+--- a/src/redis_ipc.c
++++ b/src/redis_ipc.c
+@@ -25,12 +25,14 @@ struct redis_ipc_per_thread
+ 
+ static __thread struct redis_ipc_per_thread *redis_ipc_info = NULL;
+ 
+-// gettid() is missing a libc wrapper for some reason
++// gettid() is missing a libc wrapper before glibc 2.30
+ // (manpage even mentions it)
++#if (__GLIBC_MINOR__ < 30)
+ pid_t gettid()
+ {
+   return syscall(SYS_gettid);
+ }
++#endif
+ 
+ struct redis_ipc_per_thread * get_per_thread_info()
+ {
+diff --git a/test/multithread_test.c b/test/multithread_test.c
+index 7ec0b62..675bfdf 100644
+--- a/test/multithread_test.c
++++ b/test/multithread_test.c
+@@ -5,12 +5,14 @@
+ #include <pthread.h>
+ #include "redis_ipc.h"
+ 
+-// gettid() is missing a libc wrapper for some reason
++// gettid() is missing a libc wrapper before glibc 2.30
+ // (manpage even mentions it)
++#if (__GLIBC_MINOR__ < 30)
+ pid_t gettid()
+ {
+   return syscall(SYS_gettid);
+ }
++#endif
+ 
+ void *run_printer_thread(void *data)
+ {

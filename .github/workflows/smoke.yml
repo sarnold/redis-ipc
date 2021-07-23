@@ -50,9 +50,10 @@ jobs:
         sudo apt-get install -y redis-tools redis-server
 
     - name: Patch source
-      if: matrix.os == 'ubuntu-20.04'
+      # if: matrix.os == 'ubuntu-20.04'
       run: |
         patch -p1 < compat/0001-fix-build-against-json-c-0_15-on-focal.patch
+        patch -p1 < compat/0002-make-gettid-conditional.patch
 
     - name: Configure
       run: ./autogen.sh

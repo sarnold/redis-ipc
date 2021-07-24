@@ -5,16 +5,19 @@ import os
 import redis
 import json
 import time
-import pdb   ########## debug  ( no kidding)
+import pdb  ## required for debug  (no kidding)
+
+
 # global data
 """
 """
+
 
 # global functions
 def pdic2jdic(pdic):
     """
     pdic   -    a Python dictionary
-    
+
     returns a JSON dictionary
     """
     if type(pdic) != type({}):
@@ -24,7 +27,7 @@ def pdic2jdic(pdic):
     except (TypeError,ValueError):
         raise BadMessage
     return jd
-    
+
 def jdic2pdic(jdic):
     """
     jdic     -    a JSON string which is a hash
@@ -50,7 +53,7 @@ def redis_connect(unix_socket_path="/tmp/redis-ipc/socket"):
     except redis.ConnectionError:
         raise NoRedis
     return conn
-    
+
 # exceptions
 class RedisIpcExc(Exception):
     pass
@@ -88,7 +91,7 @@ class redis_client(object):
         ts=str(time.time())   # floating timestamp
         the_id=self.component + ':' + str(self.process_number) + ':' + ts
         return the_id,ts
-        
+
     def redis_ipc_send_and_receive(self, dest, cmd, tmout):
         """
         dest     -   name of the component to handle this command (string)
@@ -114,13 +117,13 @@ class redis_client(object):
         # an exception is raised by the request function if it times out
         response=self.__redis_ipc_receive_reply(cmd, tmout)
         return response
-        
+
     def __redis_ipc_send_command(self, dest_queue, cmd):
         """
         arguments are mandatory
-        dest_queue -   command queue serviced by destination component 
+        dest_queue -   command queue serviced by destination component
         cmd        -   a command known to the receiving component
-                     
+
         this routine does not block
         it just sends the command to the back of the queue
         """
@@ -135,20 +138,20 @@ class redis_client(object):
         arguments are mandatory
         cmd           - command for which we await a reply
         tmout         - timeout for receiving a response, floating seconds
-        
+
         a proper response is a JSON dictionary
         turn it into a Python dictionary
-        
-        if the request timed out, the response is empty, 
+
+        if the request timed out, the response is empty,
         and an exception will be raised
         if a non-empty value was received, if it is not the response
         to the specified command
            try again
-        else 
+        else
            return this result
-        
+
         """
-        
+
         # use self.results_queue as name of queue to wait on
         # throw out received messages until reply["command_id"] == cmd["command_id"]
         while True:
@@ -160,10 +163,10 @@ class redis_client(object):
                 continue  # skip this message, not our response
             # take it
             return decoded_reply  # good enough
-            
-            
+
+
 class redis_server(object):
-    
+
     def __init__(self, component):
         """
         component : friendly name for calling program
@@ -184,20 +187,20 @@ class redis_server(object):
 
     def redis_ipc_receive_command(self):
         """
-        blocks for command to arrive in own command queue, 
+        blocks for command to arrive in own command queue,
         return it as Python dictionary
         """
         # get serialized command message
         redis_reply=self.redis_conn.blpop(self.command_queue)
         decoded_reply=jdic2pdic(redis_reply[1])
         return decoded_reply
-        
+
     def redis_ipc_send_reply(self, cmd, result):
         """
         arguments are mandatory
         cmd    - command that was processed so result is now available
         result - the generated result
-                     
+
         this routine does not block
         it just sends the reply to the back of the queue
         """

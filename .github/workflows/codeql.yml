@@ -1,0 +1,50 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+#  schedule:
+#    - cron: '21 20 * * 5'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-18.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp', 'python']
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: ${{ matrix.language }}
+
+    # we need to build instead of autobuild
+    - name: Common dependencies
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get install -y libhiredis-dev autoconf automake
+        sudo apt-get install -y libjson-c-dev
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v1
+
+    #- name: Configure
+      #run: |
+        #./autogen.sh
+        #./configure
+
+    #- name: Build
+      #run: make
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1

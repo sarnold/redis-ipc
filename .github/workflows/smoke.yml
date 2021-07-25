@@ -62,9 +62,17 @@ jobs:
         mkdir -p /tmp/redis-ipc
         redis-server --port 0 --pidfile /run/redis.pid --unixsocket /tmp/redis-ipc/socket --unixsocketperm 600 &
 
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: cpp
+
     - name: Test
       run: |
         make check
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
 
     - name: Generate coverage
       run: |

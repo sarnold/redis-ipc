@@ -500,7 +500,7 @@ either add "." to your PYTHON_PATH or copy the python module to `site-packages`.
 To start a local redis server first, run the following *before* you start
 the python interpreter::
 
-    $ redis-server --port 0 --pidfile /run/redis.pid --unixsocket /tmp/redis-ipc/socket --unixsocketperm 600 &
+    $ redis-server --port 0 --pidfile /tmp/redis.pid --unixsocket /tmp/redis-ipc/socket --unixsocketperm 600 &
 
 The above will background the redis server, but you may need to hit
 <Enter> once to get the prompt back. Then type `python` in the source
@@ -539,6 +539,10 @@ If there is no running redis server, then you will get the following::
     Traceback (most recent call last):
     ...
     redis.exceptions.ConnectionError: Error 2 connecting to unix socket: /tmp/redis-ipc/socket. No such file or directory.
+
+When finished with the above, don't forget to kill the redis server::
+
+    $ cat /tmp/redis.pid | xargs kill
 
 
 .. _redis: http://redis.io/

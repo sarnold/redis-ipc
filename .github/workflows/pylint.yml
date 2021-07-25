@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   pylint:
@@ -22,15 +22,15 @@ jobs:
       with:
         python-version: 3.8
 
-    - name: Install pylint
+    - name: Install tox
       run: |
         python -m pip install --upgrade pip wheel
-        pip install pylint
+        pip install tox tox-gh-actions
     
     - name: Run pylint
       id: pylint
       run: |
-        rating=$(bash -c 'pylint redis_ipc.py' | grep 'Your code has been rated at' | cut -f7 -d " ")
+        rating=$(bash -c 'tox -e lint' | grep 'Your code has been rated at' | cut -f7 -d " ")
         echo "##[set-output name=rating;]${rating}"
         mkdir -p "${BADGE_PATH%/*}"
         echo "##[set-output name=path;]${BADGE_PATH}"

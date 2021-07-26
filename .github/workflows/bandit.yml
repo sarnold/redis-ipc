@@ -27,4 +27,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         project_path: redis_ipc.py
-        ignore_failure: true
+        ignore_failure: false

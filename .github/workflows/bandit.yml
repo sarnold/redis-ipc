@@ -1,0 +1,19 @@
+name: "Bandit Check for Python code"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  main:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run bandit
+      uses: tj-actions/bandit@v5
+      with:
+        version: "1.7.0"
+        targets: "redis_ipc.py"

@@ -17,6 +17,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Environment
+      run: |
+        bash -c set
+
     - name: Run bandit
       uses: ioggstream/bandit-report-artifacts@v0.0.2
       with:

@@ -1,4 +1,4 @@
-name: "Bandit Check for Python code"
+name: Security check - Bandit
 
 on:
   workflow_dispatch:
@@ -7,13 +7,18 @@ on:
   pull_request:
 
 jobs:
-  main:
-    runs-on: ubuntu-20.04
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04, macos-latest ]
+    name: Python ${{ matrix.os }} 
+
     steps:
     - uses: actions/checkout@v2
 
     - name: Run bandit
-      uses: tj-actions/bandit@v5
+      uses: ioggstream/bandit-report-artifacts@v0.0.2
       with:
-        version: "1.7.0"
-        targets: "redis_ipc.py"
+        project_path: redis_ipc.py
+        ignore_failure: true

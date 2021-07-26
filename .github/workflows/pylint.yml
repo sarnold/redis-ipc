@@ -16,6 +16,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        # persist-credentials: false
+        fetch-depth: 0
 
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
@@ -48,10 +51,11 @@ jobs:
     - name: Commit badges
       continue-on-error: true
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
         git add .github/badges/
         git commit -m "Update Badges"
+        git status
 
     - name: Push badge commit
       uses: ad-m/github-push-action@master

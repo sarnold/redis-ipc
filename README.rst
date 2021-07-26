@@ -1,9 +1,9 @@
 ===========
  redis-ipc
 ===========
-|ci| |codeql| |cov| |tag|
+|ci| |codeql| |cov|
 
-|license| |python| |pylint|
+|license| |python| |tag|
 
 redis-ipc is an example of how redis_ can be used as an advanced IPC 
 mechanism on an embedded Linux system, for instance as a substitute for the
@@ -565,7 +565,3 @@ When finished with the above, don't forget to kill the redis server::
 .. |python| image:: https://img.shields.io/badge/python-3.6+-blue.svg
     :target: https://www.python.org/downloads/
     :alt: Python
-
-.. |pylint| image:: https://github.com/VCTLabs/redis-ipc/blob/badges/.github/badges/pylint-score.svg
-    :target: https://github.com/VCTLabs/redis-ipc/actions?query=workflow:Pylint
-    :alt: Pylint score

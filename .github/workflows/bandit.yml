@@ -3,7 +3,7 @@ name: Security check - Bandit
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
+    branches: [ "*" ]
   pull_request:
     branches: [ "*" ]
 
@@ -14,13 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Environment
-      run: |
-        bash -c set
-
     - name: Run bandit
       uses: ioggstream/bandit-report-artifacts@v0.0.1
       with:
         project_path: redis_ipc.py
-        # this must be false to see annotaions in github PR
-        ignore_failure: false
+        ignore_failure: true
